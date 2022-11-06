@@ -3,4 +3,4 @@
 ### Задание 1
 
 
-[alt text](https://github.com/MaratAlaev/gitlab-hw/blob/main/img/1.png)
+[скриншот к заданию 1](https://github.com/MaratAlaev/gitlab-hw/blob/main/img/1.png)
