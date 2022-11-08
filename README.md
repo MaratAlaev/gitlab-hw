@@ -3,10 +3,10 @@
 ### Задание 1
 
 
-[Cкриншот к заданию 1](https://github.com/MaratAlaev/gitlab-hw/blob/main/img/91-1.png)
+[Cкриншот к заданию 1](https://github.com/MaratAlaev/gitlab-hw/blob/9.1/img/91-1.png)
 
 
 ### Задание 2
 
 
-[Скриншот к заданию 2](https://github.com/MaratAlaev/gitlab-hw/blob/main/img/91-2.png)
+[Скриншот к заданию 2](https://github.com/MaratAlaev/gitlab-hw/blob/9.1/img/91-2.png)
