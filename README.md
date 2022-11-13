@@ -10,7 +10,7 @@
 
 [1 скриншот](https://github.com/MaratAlaev/gitlab-hw/blob/9.3_Zabbix/img/93-2-1.png)
 
-[2 скриншот](https://github.com/MaratAlaev/gitlab-hw/blob/9.3_Zabbiximg/93-2-2.png)
+[2 скриншот](https://github.com/MaratAlaev/gitlab-hw/blob/9.3_Zabbix/img/93-2-2.png)
 
 [3 скриншот](https://github.com/MaratAlaev/gitlab-hw/blob/9.3_Zabbix/img/93-2-3.png)
 
