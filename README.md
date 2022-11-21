@@ -17,7 +17,7 @@
 
 ### Задние 4
 
-[Cкриншот к заданию 4](https://github.com/MaratAlaev/gitlab-hw/blob/9.4_Prometheus1img/94-4.png)
+[Cкриншот к заданию 4](https://github.com/MaratAlaev/gitlab-hw/blob/9.4_Prometheus1/img/94-4.png)
 
 ### Задание 5
 
