@@ -1,21 +1,71 @@
-# Домашнее задание к занятию `9.5. Prometheus ч.2` - `Алаев Марат`
+# Домашнее задание к занятию `10.1. Keepalived/vrrp` - `Алаев Марат`
 
 ### Задание 1
 
+MASTER:
 
-[Cкриншот к заданию 1](https://github.com/MaratAlaev/gitlab-hw/blob/9.5_Prometheus2/img/95-1.png)
+```
+vrrp_instance test {
+state MASTER
+interface ens33
+virtual_router_id 10
+priority 110
+#advert_int 4
+authentication {
+auth_type AH
+auth_pass test
+}
 
+unicast_peer {
+192.168.61.128
+}
+
+virtual_ipaddress {
+192.168.61.31  dev ens33 label ens33:vip
+}
+}
+```
+
+
+BACKUP:
+
+```
+vrrp_instance test {
+state BACKUP
+interface ens33
+virtual_router_id 10
+priority 100
+#advert_int 4
+authentication {
+auth_type AH
+auth_pass test
+}
+
+unicast_peer {
+192.168.61.141
+}
+
+virtual_ipaddress {
+192.168.61.31  dev ens33 label ens33:vip
+}
+}
+```
+
+
+
+[1 Скриншот](https://github.com/MaratAlaev/gitlab-hw/blob/Keepalived/img/1-1.png)
+
+
+[2 Скриншот](https://github.com/MaratAlaev/gitlab-hw/blob/Keepalived/img/1-2.png)
 
 ### Задание 2
 
-[1 Скриншот](https://github.com/MaratAlaev/gitlab-hw/blob/9.5_Prometheus2/img/95-2-1.png)
-[2 Скриншот](https://github.com/MaratAlaev/gitlab-hw/blob/9.5_Prometheus2/img/95-2-2.png)
+до отключения мастера:
 
-### Задание 3
+[1 Скриншот](https://github.com/MaratAlaev/gitlab-hw/blob/Keepalived/img/2-1.png)
 
-[1 Скриншот](https://github.com/MaratAlaev/gitlab-hw/blob/9.5_Prometheus2/img/95-3-1.png)
-[2 Скриншот](https://github.com/MaratAlaev/gitlab-hw/blob/9.5_Prometheus2/img/95-3-2.png)
 
-### Задние 4
 
-[Cкриншот к заданию 4](https://github.com/MaratAlaev/gitlab-hw/blob/9.5_Prometheus2/img/95-4.png)
+после отключения мастера: 
+
+[2 Скриншот](https://github.com/MaratAlaev/gitlab-hw/blob/Keepalived/img/2-2.png)
