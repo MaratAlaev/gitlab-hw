@@ -36,7 +36,7 @@
 
 ### Задание 3
 
-[Cкриншот к заданию 3](https://github.com/MaratAlaev/gitlab-hw/blob/10.3-Pacemaker/img/10-3-3.png)
+[Cкриншот к заданию 3](https://github.com/MaratAlaev/gitlab-hw/blob/10.3_Pacemaker/img/10-3-3.png)
 
 
 
