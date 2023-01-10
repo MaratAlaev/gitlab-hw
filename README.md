@@ -2,42 +2,67 @@
 
 ### Задание 1
 
-
-[Cкриншот к заданию 1](https://github.com/MaratAlaev/gitlab-hw/blob/9.2_Zabbix/img/92-1.png)
-
-```bash
-wget https://repo.zabbix.com/zabbix/6.0/ubuntu-arm64/pool/main/z/zabbix-release/zabbix-release_6.0-5%2Bubuntu20.04_all.deb
-dpkg -i zabbix-release_6.0-5+ubuntu20.04_all.deb
-apt update
-
-apt install zabbix-server-pgsql zabbix-frontend-php php7.4-pgsql zabbix-nginx-conf zabbix-sql-scripts zabbix-agent
-
-sudo -u postgres createuser --pwprompt zabbix
-sudo -u postgres createdb -O zabbix zabbix
-
-zcat /usr/share/zabbix-sql-scripts/postgresql/server.sql.gz | sudo -u zabbix psql zabbix
-```
+Основное различие в том, что у MPP разделенная физическая память 
+а у SMP общая
 
 
 ### Задание 2
 
-
-# Скриншоты к заданию 2
-
-[1:](https://github.com/MaratAlaev/gitlab-hw/blob/9.2_Zabbix/img/92-2.png)
-
-[2:](https://github.com/MaratAlaev/gitlab-hw/blob/9.2_Zabbix/img/92-2-2.png)
-
-[3:](https://github.com/MaratAlaev/gitlab-hw/blob/9.2_Zabbix/img/92-2-3.png)
-
-
-```bash
-sudo apt install zabbix-agent
-sudo nano /etc/zabbix/zabbix_agentd.conf
-sudo systemctl restart zabbix-agent.service 
-```
-
+Сильно связанные системы состоят из однородных процессоров и общей памяти 
+В то время как в слабо связанных память распределяется на все процессоры 
 
 ### Задание 3
 
+абсолютная масштабируемость
+
+нет ограничений на размер узлов и кластеров
+
+наращиваемая масштабируемость
+
+можно расширять узлы по необходимости
+
+высокий коэффициент готовности
+
+отказоустойчивость, благодаря автономности узлов
+
+соотношение цена/производительность
+
+можно строить кластер из любых строительных блоков: чем
+проще и стандартнее блоки, тем дешевле обходится
+вычислительная мощност
+
+
 [Cкриншот к заданию 3](https://github.com/MaratAlaev/gitlab-hw/blob/9.2_Zabbix/img/92-3.png)
+
+### Задание 4
+
+Кластеры высокой доступности 
+
+Кластеры с балансировкой нагрузки
+
+Вычислительные кластеры
+
+Системы распределенных вычислений
+
+### Задание 5
+
+Kafka используется в микросервисах 
+для связи сервисов между собой 
+
+rabitMQ используется в системах где требуется гарантированная доставка сообщений 
+нам не нужно больше планировать архитектуру так чтобы каждый компонент передавал данные другим компонентам 
+с помощью брокера, можно наладить передачу сообщений одному и более компанентам
+
+### Задание 6
+
+[Cкриншот к заданию 6](https://github.com/MaratAlaev/gitlab-hw/blob/10.2_Кластеризация/img/10-2-6.png)
+
+3 узла RabbitMQ - их кол-во можно изменить
+3 сети докеров - чтобы иметь возможность моделировать разделение сети
+1 узел HAProxy - для балансировки нагрузки на запрос и для защиты от сбоев
+1 сеть по умолчанию - для соединения с узлами через HAProxy
+
+
+Балансировка нагрузки
+Отказ узла
+Разделение сети
