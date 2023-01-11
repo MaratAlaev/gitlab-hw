@@ -1,121 +1,83 @@
-# Домашнее задание к занятию `10.5 Балансировка нагрузки. HAProxy/Nginx` - `Алаев Марат`
+# Домашнее задание к занятию `10.6 Disaster recovery` - `Алаев Марат`
 
 ### Задание 1
 
-Это сервис который занимается распределением нагрузки 
-на приложения, гарантирует, что приложения не будут перегружены 
-бывают как хардвейр так и софт решения
+Аварийное восстановление как услуга (DRaaS) - это модель сервиса которая позволяет делать резервное копирование инфраструктуры в сторонний облачный сервис 
+
+Бэкенд как услуга (BaaS) - это модель сервиса которая позволяет расположить бэкенд 
+в облачном сервисе  
+
+Active-Active - это кластер который может содержать две и более машин + балансировщик, такое построение кластера поможет избежать перегрузки одного узла
+
+Active-Passive - это кластер который похож на Active-Active за исключением того 
+что один сервер находится в режиме ожидания 
+и когда упадет один, другой его подменит, до момента восстановления первого 
+
+в чем отличия 
+отличия заключаются в том, что DRaas - используется  для хранения инфраструктуры в облаке
+в BaaS, будет только бэкенд и не только хранится там, но и так же будет запущен для работы 
+Active-Active и Active-Passive по хранению данных тоже схожи, скорее всего в них также будет лежать бэкенд как в Baas, а не вся инфроструктура
 
 
 ### Задание 2
 
- Round Robin - последовательное распределение запросов на пул серверов 
-подходит в том случае если все сервера имеют одинаковую мощность
+план восстановления:
 
- Weighted Round Robin - похож на Round Robin за исключением того 
-что нагрузку можно распределить неравномерно 
-то есть на более мощный сервер можно увеличить нагрузку на более слабый уменьшить
-это должно хорошо подойти если пул серверов имеет разную мощность
+восстановление должно проводиться после 18:30 в рабочие дни 
+данные должны собираться с дисков /sdb1 /sdc1
+для этого нужно будет использовать второй сервер 
+реализация будет с помощью rsync
 
 
 ### Задание 3
 
-[Cкриншот к заданию 3](https://github.com/MaratAlaev/gitlab-hw/blob/10.5_HAProxy/Nginx/img/10-5-3-1.png)
-
-### Задание 4
-
-[Cкриншот к заданию 4](https://github.com/MaratAlaev/gitlab-hw/blob/10.5_HAProxy/Nginx/img/10-5-4-1.png)
-
-### Задание 5 
-
+rsync:
 ```
-user www-data;
+pid file = /var/run/rsyncd.pid
 
-worker_processes auto;
+log file = /var/log/rsyncd.log
 
-pid /run/nginx.pid;
+transfer logging = true
 
-include /etc/nginx/modules-enabled/*.conf;
+munge symlinks = yes
 
+[data]
 
-events {}
+path = /home
 
-http {
-	sendfile on;
+uid = root
 
-	tcp_nopush on;
+read only = yes
 
-	types_hash_max_size 2048;
+list = yes
 
+comment = Data backup Dir
 
-	include /etc/nginx/mime.types;
+auth users = backup
 
-	default_type application/octet-stream;
+secrets file = /etc/rsyncd.scrt
 
-	add_header Content-Type text/plain;
+[data2]
 
+path = /ds
 
-	ssl_protocols TLSv1 TLSv1.1 TLSv1.2 TLSv1.3; # Dropping SSLv3, ref: POODLE
+uid = root
 
-	ssl_prefer_server_ciphers on;
+read only = yes
 
+list = yes
 
+comment = Data backup Dir
 
+auth users = backup
 
-	access_log /var/log/nginx/access.log;
-error_log /var/log/nginx/error.log;
-gzip on;
-
-application/xml application/xml+rss text/javascript;
-
-
-
-	include /etc/nginx/conf.d/*.conf;
-
-	include /etc/nginx/sites-enabled/*;
-
-
-	server {
-
-		listen     8088;
-	
-
-	location /ping {
-
-	 return 200	'nginx is configured correctly';
-
-	}
-
-     }
-
-}
+secrets file = /etc/rsyncd.scrt
 ```
 
-[Cкриншот к заданию 5](https://github.com/MaratAlaev/gitlab-hw/blob/10.5_HAProxy/Nginx/img/10-5-5-1.png)
 
 
-### Задание 6
+crontab:
 
 ```
-frontend http_front
-
-   mode http
-
-   bind *:8080
-
-   default_backend node
-
-
-
-backend node
-
-   mode http
-
-   balance roundrobin
-
-   http-request set-path /ping
-
-   server s1 192.168.123.4:8088
+0 /18 * * 1-5  /root/scripts/bacup-node1.sh
 ```
-
-[Cкриншот к заданию 6](https://github.com/MaratAlaev/gitlab-hw/blob/10.5_HAProxy/Nginx/img/10-5-6-1.png)
