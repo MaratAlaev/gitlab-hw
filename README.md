@@ -7,13 +7,14 @@
 
 
 ```SQL
-select district 
+select distinct district 
 from address
 where district like 'K%' and district like '%a' and district not like '% %'
 ```
 
 
-![Cкриншот 1](https://github.com/MaratAlaev/gitlab-hw/blob/12.3_SQL1/img/1-1.png)
+![image](https://user-images.githubusercontent.com/46092593/218338338-9b901da0-7a95-4d36-a04b-8aa7a9d30747.png)
+
 
 
 ### Задание 2
@@ -28,7 +29,7 @@ where p.payment_date >= "2005-06-15" and p.payment_date <= "2005-06-18 23:59:59"
 and p.customer_id = c.customer_id
 ```
 
-![Cкриншот 1](https://github.com/MaratAlaev/gitlab-hw/blob/12.3_SQL1/img/2-1.png)
+![image](https://user-images.githubusercontent.com/46092593/218338369-d1a3c5af-ee9b-4396-a667-3384a2248dec.png)
 
 
 ### Задание 3
