@@ -3,26 +3,65 @@
 
 ### Задание 1
 
-[Cкриншот 1](https://github.com/MaratAlaev/gitlab-hw/blob/12.2_DDL/DML/img/1-1.png)
+1.1. Поднимите чистый инстанс MySQL версии 8.0+. Можно использовать локальный сервер или контейнер Docker.
 
-[Cкриншот 2](https://github.com/MaratAlaev/gitlab-hw/blob/12.2_DDL/DML/img/1-2.png)
+1.2. Создайте учётную запись sys_temp.
 
-[Cкриншот 3](https://github.com/MaratAlaev/gitlab-hw/blob/12.2_DDL/DML/img/1-3.png)
+1.3. Выполните запрос на получение списка пользователей в базе данных. (скриншот)
 
-[Cкриншот 4](https://github.com/MaratAlaev/gitlab-hw/blob/12.2_DDL/DML/img/1-4.png)
+1.4. Дайте все права для пользователя sys_temp.
+
+1.5. Выполните запрос на получение списка прав для пользователя sys_temp. (скриншот)
+
+1.6. Переподключитесь к базе данных от имени sys_temp.
+
+Для смены типа аутентификации с sha2 используйте запрос:
+```
+ALTER USER 'sys_test'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
+```
+1.6. По ссылке https://downloads.mysql.com/docs/sakila-db.zip скачайте дамп базы данных.
+
+1.7. Восстановите дамп в базу данных.
+
+1.8. При работе в IDE сформируйте ER-диаграмму получившейся базы данных. При работе в командной строке используйте команду для получения всех таблиц базы данных. (скриншот)
+
+Результатом работы должны быть скриншоты обозначенных заданий, а также простыня со всеми запросами.
+
+![Cкриншот 1](https://github.com/MaratAlaev/gitlab-hw/blob/12.2_DDL/DML/img/1-1.png)
+
+![Cкриншот 2](https://github.com/MaratAlaev/gitlab-hw/blob/12.2_DDL/DML/img/1-2.png)
+
+![Cкриншот 3](https://github.com/MaratAlaev/gitlab-hw/blob/12.2_DDL/DML/img/1-3.png)
+
+![Cкриншот 4](https://github.com/MaratAlaev/gitlab-hw/blob/12.2_DDL/DML/img/1-4.png)
 
 
 
 ### Задание 2
 
+Составьте таблицу, используя любой текстовый редактор или Excel, в которой должно быть два столбца: в первом должны быть названия таблиц восстановленной базы, во втором названия первичных ключей этих таблиц. Пример: (скриншот/текст)
+
+```
+Название таблицы | Название первичного ключа
+customer         | customer_id
+```
+
+```SQL
 SELECT TABLE_NAME, COLUMN_NAME FROM information_schema.key_column_usage WHERE TABLE_SCHEMA = "sakila" AND CONSTRAINT_NAME = "PRIMARY" 
+```
 
 
-[Cкриншот 1](https://github.com/MaratAlaev/gitlab-hw/blob/12.2_DDL/DML/img/2-1.png)
+![Cкриншот 1](https://github.com/MaratAlaev/gitlab-hw/blob/12.2_DDL/DML/img/2-1.png)
 
 
 ### Задание 3
 
-[Cкриншот 1](https://github.com/MaratAlaev/gitlab-hw/blob/12.2_DDL/DML/img/3-1.png)
+3.1. Уберите у пользователя sys_temp права на внесение, изменение и удаление данных из базы sakila.
+
+3.2. Выполните запрос на получение списка прав для пользователя sys_temp. (скриншот)
+
+Результатом работы должны быть скриншоты обозначенных заданий, а также простыня со всеми запросами
+
+![Cкриншот 1](https://github.com/MaratAlaev/gitlab-hw/blob/12.2_DDL/DML/img/3-1.png)
 
   
