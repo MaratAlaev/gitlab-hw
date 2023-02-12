@@ -1,225 +1,81 @@
-# Домашнее задание к занятию `10.7 «Отказоустойчивость в облаке»` - `Алаев Марат`
+# Домашнее задание к занятию `11.1. «Базы данных, их типы»` - `Алаев Марат`
 
 
 ### Задание 1
 
 
-```
-terraform {
-  required_providers {
-    yandex = {
-      source = "yandex-cloud/yandex"
-    }
-  }
-}
+1.1  Думаю тут отлично подойдут реляционные базы данных 
+так как работают с помощью таблиц и полей, поля  все строго типизированы
+и связь таблиц основана на вторичных и первичных ключах
 
-provider "yandex" {
-  zone = "ru-central1-a"
-}
+1.1 Возможно тут можно использовать приложение, которое будет создавать очереди на создание хешей 
 
-resource "yandex_compute_instance" "vm" {
-  count = 2
+1.2  Тут думаю лучше подойдет NoSql - из-за своей скорости и читаемости
 
-  name = "test-${count.index}"
+1.2   Можно использовать Cassandra с реализацией AP
 
-  resources {
-    cores  = 2
-    memory = 2
-  }
+1.3 тут также можно использовать NoSQL  
 
-  boot_disk {
-    initialize_params {
-      image_id = "fd8kb72eo1r5fs97a1ki"
-    }
-  }
+1.3 да, возможно, так как NoSQL подходит в случаях выше
 
-  network_interface {
-    subnet_id = yandex_vpc_subnet.subnet-1.id
-    nat       = true
-  }
-
-  metadata = {
-    user-data = "${file("./meta.txt")}"
-  }
-
-  provisioner "remote-exec" {
-    inline = ["sudo apt update", "sudo apt install nginx -y"]
-  }
-
-  connection {
-    host        = self.network_interface.0.nat_ip_address
-    type        = "ssh"
-    user        = "terruser"
-    private_key = file(var.ssh_key_private)
-  }
-}
-
-resource "yandex_vpc_network" "network-1" {
-  name = "network1"
-}
-
-resource "yandex_vpc_subnet" "subnet-1" {
-  name           = "subnet1"
-  zone           = "ru-central1-a"
-  network_id     = yandex_vpc_network.network-1.id
-  v4_cidr_blocks = ["192.168.10.0/24"]
-}
-
-resource "yandex_lb_target_group" "targetgroup" {
-  name      = "my-target-group"
-  region_id = "ru-central1"
-
-  target {
-    subnet_id = "${yandex_vpc_subnet.subnet-1.id}"
-    address   = "${yandex_compute_instance.vm[0].network_interface.0.ip_address}"
-  }
-
-  target {
-    subnet_id = "${yandex_vpc_subnet.subnet-1.id}"
-    address   = "${yandex_compute_instance.vm[1].network_interface.0.ip_address}"
-  }
-}
-
-resource "yandex_lb_network_load_balancer" "loadbalancer" {
-  name = "load-balancer"
-
-  listener {
-    name = "listener"
-    port = 80
-    external_address_spec {
-      ip_version = "ipv4"
-    }
-  }
-
-  attached_target_group {
-    target_group_id = "${yandex_lb_target_group.targetgroup.id}"
-
-    healthcheck {
-      name = "http"
-      http_options {
-        port = 80
-      }
-    }
-  }
-}
-```
-
-[Cкриншот 1](https://github.com/MaratAlaev/gitlab-hw/blob/10.7_FailSafeInCloud/img/10-7-1-1.png)
+1.4 Тут хорошо подойдут базы данных NoSql документо-ориентированные 
+так как хорошо работают с большим набором данных и быстро 
 
 
-[Cкриншот 2](https://github.com/MaratAlaev/gitlab-hw/blob/10.7_FailSafeInCloud/img/10-7-1-2.png)
+1.4 Думаю можно, так как на скорость это скорее всего не повлияет и работать с базой будет проще
 
-
-[Cкриншот 3](https://github.com/MaratAlaev/gitlab-hw/blob/10.7_FailSafeInCloud/img/10-7-1-3.png)
-
+1.5 Думаю  MongoDB покроет все требования, так как быстрая, с понятной структурой
+и имею довольно строгую структуру данных  
 
 
 ### Задание 2
+  
+проверка банка на наличие указанных средств + проверка пользователя на пароль   
+Отправка запроса от банка мобильному оператору
+обработка запроса на корректность номера и других переданных данных
+возвращение банку ответа о том что транзакци возможно и все данные корректные
+начисление средств на мобильный счет
+уведомление пользователя о начислении средств
+
+через автоплатеж:
+обработчик событий начинает выполнять операцию по начислению средств на телефон 
+Банк посылает запрос мобильному оператору с вопросом о задолженности
+Мобильный оператор возвращает запрос с суммой платежа 
+Банк обрабатывает запрос и смотрит есть ли указанная сумма на банковском счету
+если есть то начинает опирацию пополнения счета
+после, схема такая же как и при оплате без автоплатежа, с 3 по 6 шаг
 
 
-```
-terraform {
-  required_providers {
-    yandex = {
-      source = "yandex-cloud/yandex"
-    }
-  }
-}
 
-provider "yandex" {
-  zone = "ru-central1-a"
-}
+### Задание 3
 
-resource "yandex_compute_instance_group" "ig-1" {
-  name               = "with-balancer"
-  folder_id          = "b1gamifnjr6h49otdp48"
-  service_account_id = "ajemk29m97hsrlbmbqe4"
+1.1
+У всех SQL баз данных один и тот же язык 
+что позволяет при переходе к новой базе данных 
+не переписывать кодовую базу
+Больший функционал языков SQL  так как поддерживается множество лет и всегда пополнялся
+создание схемы на момент реализации базы 
+NoSQL не позволяют создать схему подобную SQL 
+благодаря этому в SQL можно увидеть всевозможные проблемы еще на моменте проектирования
+Быстрый переход с одной реляционной базы на другую реляционную
+Проще найти специалистов по реляционным базам данных
 
-  instance_template {
-    platform_id = "standard-v3"
-    resources {
-      memory = 2
-      cores  = 2
-    }
-
-    boot_disk {
-      mode = "READ_WRITE"
-      initialize_params {
-        image_id = "fd8kb72eo1r5fs97a1ki"
-      }
-    }
-
-    network_interface {
-      network_id = "${yandex_vpc_network.network-1.id}"
-      nat = true
-      subnet_ids = ["${yandex_vpc_subnet.subnet-1.id}"]
-    }
-
-    metadata = {
-      ssh-keys = "terruser:${file(var.ssh_key_private)}"
-      user-data = file("./metadata.yaml")
-    }
-  }
-
-  scale_policy {
-    fixed_scale {
-      size = 2
-    }
-  }
-
-  allocation_policy {
-    zones = ["ru-central1-a"]
-  }
-
-  deploy_policy {
-    max_unavailable = 1
-    max_expansion   = 0
-  }
-
-  load_balancer {
-    target_group_name        = "target-group"
-    target_group_description = "load balancer target group"
-  }
-}
-
-resource "yandex_vpc_network" "network-1" {
-  name = "network1"
-}
-
-resource "yandex_vpc_subnet" "subnet-1" {
-  name           = "subnet1"
-  zone           = "ru-central1-a"
-  network_id     = "${yandex_vpc_network.network-1.id}"
-  v4_cidr_blocks = ["192.168.10.0/24"]
-}
-
-resource "yandex_lb_network_load_balancer" "loadbalancer" {
-  name = "load-balancer"
-
-  listener {
-    name = "listener"
-    port = 80
-    external_address_spec {
-      ip_version = "ipv4"
-    }
-  }
-
-  attached_target_group {
-    target_group_id = "${yandex_compute_instance_group.ig-1.load_balancer.0.target_group_id}"
-
-    healthcheck {
-      name = "http"
-      http_options {
-        port = 80
-        path = "/"
-      }
-    }
-  }
-}
-```
+1.2
+NewSQL поддерживает ACID, что обеспечивает лучшую целостность данных чем NoSQL
+NewSQL может упростить приложение, которым не требуются все навороты SQL
 
 
-[Cкриншот 1](https://github.com/MaratAlaev/gitlab-hw/blob/10.7_FailSafeInCloud/img/10-7-2-1.png)
+### Задание 4
+
+Тут отлично подойдет трехуровневая архитектура
+так как благодаря разделению ответственности, сокращается количество узких мест и повышает производительность распределенных вычислений
 
 
-[Cкриншот 2](https://github.com/MaratAlaev/gitlab-hw/blob/10.7_FailSafeInCloud/img/10-7-2-2.png)
+Основными критериями будет:
+
+производительность
+надежность 
+возможность быстрого масштабирования
+
+
+  
