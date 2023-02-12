@@ -3,34 +3,83 @@
 
 ### Задание 1
 
+Используя Vagrant или VirtualBox, создайте виртуальную машину и установите RabbitMQ. Добавьте management plug-in и зайдите в веб-интерфейс.
 
-[Cкриншот 1](https://github.com/MaratAlaev/gitlab-hw/blob/11.4_RabbitMQ/img/1-1.png)
+Итогом выполнения домашнего задания будет приложенный скриншот веб-интерфейса RabbitMQ.
+
+
+![Cкриншот 1](https://github.com/MaratAlaev/gitlab-hw/blob/11.4_RabbitMQ/img/1-1.png)
 
 
 ### Задание 2
-  
-[Cкриншот 1](https://github.com/MaratAlaev/gitlab-hw/blob/11.4_RabbitMQ/img/2-1.png)
+
+Используя приложенные скрипты, проведите тестовую отправку и получение сообщения. Для отправки сообщений необходимо запустить скрипт producer.py.
+
+Для работы скриптов вам необходимо установить Python версии 3 и библиотеку Pika. Также в скриптах нужно указать IP-адрес машины, на которой запущен RabbitMQ, заменив localhost на нужный IP.
+
+```
+$ pip install pika
+```
+Зайдите в веб-интерфейс, найдите очередь под названием hello и сделайте скриншот. После чего запустите второй скрипт consumer.py и сделайте скриншот результата выполнения скрипта
+
+В качестве решения домашнего задания приложите оба скриншота, сделанных на этапе выполнения.
+
+Для закрепления материала можете попробовать модифицировать скрипты, чтобы поменять название очереди и отправляемое сообщение.
+ 
+![Cкриншот 1](https://github.com/MaratAlaev/gitlab-hw/blob/11.4_RabbitMQ/img/2-1.png)
 
 
 
-[Cкриншот 2](https://github.com/MaratAlaev/gitlab-hw/blob/11.4_RabbitMQ/img/2-2.png)
+![Cкриншот 2](https://github.com/MaratAlaev/gitlab-hw/blob/11.4_RabbitMQ/img/2-2.png)
 
 
 
 ### Задание 3
 
-[Cкриншот 1](https://github.com/MaratAlaev/gitlab-hw/blob/11.4_RabbitMQ/img/3-1.png)
-[Cкриншот 2](https://github.com/MaratAlaev/gitlab-hw/blob/11.4_RabbitMQ/img/3-2.png)
-[Cкриншот 3](https://github.com/MaratAlaev/gitlab-hw/blob/11.4_RabbitMQ/img/3-3.png)
-[Cкриншот 4](https://github.com/MaratAlaev/gitlab-hw/blob/11.4_RabbitMQ/img/3-4.png)
-[Cкриншот 5](https://github.com/MaratAlaev/gitlab-hw/blob/11.4_RabbitMQ/img/3-5.png)
-[Cкриншот 6](https://github.com/MaratAlaev/gitlab-hw/blob/11.4_RabbitMQ/img/3-6.png)
+Используя Vagrant или VirtualBox, создайте вторую виртуальную машину и установите RabbitMQ. Добавьте в файл hosts название и IP-адрес каждой машины, чтобы машины могли видеть друг друга по имени.
+
+Пример содержимого hosts файла:
+
+```
+$ cat /etc/hosts
+192.168.0.10 rmq01
+192.168.0.11 rmq02
+```
+
+После этого ваши машины могут пинговаться по имени.
+
+Затем объедините две машины в кластер и создайте политику ha-all на все очереди.
+
+В качестве решения домашнего задания приложите скриншоты из веб-интерфейса с информацией о доступных нодах в кластере и включённой политикой.
+
+Также приложите вывод команды с двух нод:
+```
+$ rabbitmqctl cluster_status
+```
+Для закрепления материала снова запустите скрипт producer.py и приложите скриншот выполнения команды на каждой из нод:
+```
+$ rabbitmqadmin get queue='hello'
+```
+После чего попробуйте отключить одну из нод, желательно ту, к которой подключались из скрипта, затем поправьте параметры подключения в скрипте consumer.py на вторую ноду и запустите его.
+
+Приложите скриншот результата работы второго скрипта.
+
+![Cкриншот 1](https://github.com/MaratAlaev/gitlab-hw/blob/11.4_RabbitMQ/img/3-1.png)
+![Cкриншот 2](https://github.com/MaratAlaev/gitlab-hw/blob/11.4_RabbitMQ/img/3-2.png)
+![Cкриншот 3](https://github.com/MaratAlaev/gitlab-hw/blob/11.4_RabbitMQ/img/3-3.png)
+![Cкриншот 4](https://github.com/MaratAlaev/gitlab-hw/blob/11.4_RabbitMQ/img/3-4.png)
+![Cкриншот 5](https://github.com/MaratAlaev/gitlab-hw/blob/11.4_RabbitMQ/img/3-5.png)
+![Cкриншот 6](https://github.com/MaratAlaev/gitlab-hw/blob/11.4_RabbitMQ/img/3-6.png)
 
 
 ### Задание 4
 
+Напишите плейбук, который будет производить установку RabbitMQ на любое количество нод и объединять их в кластер. При этом будет автоматически создавать политику ha-all.
 
-[playbool](https://github.com/MaratAlaev/gitlab-hw/blob/11.4_RabbitMQ/playbookRMQ.yaml)
+Готовый плейбук разместите в своём репозитории.
+
+
+[playbook](https://github.com/MaratAlaev/gitlab-hw/blob/11.4_RabbitMQ/playbookRMQ.yaml)
 
 
   
