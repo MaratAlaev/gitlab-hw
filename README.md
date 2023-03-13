@@ -14,12 +14,17 @@ select count(c.customer_id), concat(c.first_name, ' ', c.last_name), c2.city
 from customer c
 join store s  on c.store_id = s.store_id
 join address a on a.address_id = s.address_id
+join staff s2 on s.store_id = s2.staff_id 
 join city c2 on c2.city_id = a.city_id 
-group by s.store_id
-having count(s.store_id) > 300
+group by s.store_id, s2.staff_id
+having count(c.customer_id) > 300
 ```
 
-![image](https://user-images.githubusercontent.com/46092593/224708252-d69d9912-471c-48a0-847b-c8b5237c28d5.png)
+я попробовал поправить это задание 
+но все еще не до конца понимаю в чем еще тут проблема
+
+
+![image](https://user-images.githubusercontent.com/46092593/224724524-6a77cd45-2343-40f6-aec3-0e191041a3e9.png)
 
 
 ### Задание 2
@@ -29,10 +34,10 @@ having count(s.store_id) > 300
 ```SQL
 select count(f.film_id) 
 from film f
-where f.rental_duration > (select avg(f.rental_duration) from film f)
+where f.`length` > (select avg(f.`length`) from film f)
 ```
 
-![image](https://user-images.githubusercontent.com/46092593/224708384-5405e3e9-2dfb-49c2-b541-f05b180cc1ae.png)
+![image](https://user-images.githubusercontent.com/46092593/224725752-0a90a946-bec5-44e3-acab-5738b2b0257a.png)
 
 
 
@@ -44,12 +49,12 @@ where f.rental_duration > (select avg(f.rental_duration) from film f)
 select sum(p.amount), count(r.rental_id) 
 from rental r 
 join payment p on p.rental_id = r.rental_id 
-group by month(p.payment_date)
+group by date_format(p.payment_date, "%m %Y")
 having sum(p.amount) >= all(
-select sum(p2.amount) from payment p2 group by month(p2.payment_date))
+select sum(p2.amount) from payment p2 group by date_format(p2.payment_date, "%m %Y"))
 ```
 
-![image](https://user-images.githubusercontent.com/46092593/224708489-fcbb4e6e-36b6-47f3-966f-5fdacaf83114.png)
+![image](https://user-images.githubusercontent.com/46092593/224730013-1b81ee15-6cb3-4bca-ada9-7d2c4f65efcc.png)
 
 
 
@@ -80,10 +85,9 @@ group by s.staff_id
 ```SQL
 select f.title 
 from film f 
-left join inventory i on i.film_id = f.film_id
-left join rental r on i.inventory_id = r.inventory_id 
-where r.rental_id is null
+left join inventory i on i.film_id = f.film_id 
+where i.film_id is null
 ```
 
-![image](https://user-images.githubusercontent.com/46092593/224708725-b4020c1e-ee85-4a3d-9a70-178fc8f961a9.png)
+![image](https://user-images.githubusercontent.com/46092593/224732245-a7b08b1c-23ef-4380-bb8f-8afa89b90f51.png)
 
