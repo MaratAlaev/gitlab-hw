@@ -35,10 +35,11 @@ FROM payment p
 JOIN rental r ON p.rental_id = r.rental_id
 JOIN customer c ON r.customer_id = c.customer_id
 JOIN inventory i ON r.inventory_id = i.inventory_id
-JOIN film f ON i.film_id = f.film_id
-WHERE DATE(r.rental_date) = '2005-07-30'
+WHERE r.rental_date >= '2005-07-30' AND r.rental_date < '2005-07-31'
 GROUP BY c.customer_id;
 ```
+
+![image](https://user-images.githubusercontent.com/46092593/224749164-51fd8c34-5d1d-4af7-b9f7-0db90d486904.png)
 
 
 
