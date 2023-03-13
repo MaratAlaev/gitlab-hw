@@ -1,71 +1,70 @@
-# Домашнее задание к занятию `12.3. «SQL. Часть 1»` - `Алаев Марат`
+# Домашнее задание к занятию `12.4. «SQL. Часть 2»` - `Алаев Марат`
 
 
 ### Задание 1
 
 ```SQL
-select district 
-from address
-where district like 'K%' and district like '%a' and district not like '% %'
+select count(c.customer_id), concat(c.first_name, ' ', c.last_name), c2.city
+from customer c
+join store s  on c.store_id = s.store_id
+join address a on a.address_id = s.address_id
+join city c2 on c2.city_id = a.city_id 
+group by s.store_id
+having count(s.store_id) > 300
 ```
 
-
-[Cкриншот 1](https://github.com/MaratAlaev/gitlab-hw/blob/12.3_SQL1/img/1-1.png)
 
 
 ### Задание 2
 
 ```SQL
-select p.payment_date, c.first_name, c.email , c.address_id 
-from payment p, customer c
-where p.payment_date >= "2005-06-15" and p.payment_date <= "2005-06-18" and p.amount > 10.00
-and p.customer_id = c.customer_id
+select count(f.film_id) 
+from film f
+where f.rental_duration > (select avg(f.rental_duration) from film f)
 ```
 
-[Cкриншот 1](https://github.com/MaratAlaev/gitlab-hw/blob/12.3_SQL1/img/2-1.png)
+
 
 
 ### Задание 3
 
 ```SQL
- select r.rental_date, r.rental_id 
-   FROM rental r 
-   ORDER BY rental_id desc 
-   limit 5
+select sum(p.amount), count(r.rental_id) 
+from rental r 
+join payment p on p.rental_id = r.rental_id 
+group by month(p.payment_date)
+having sum(p.amount) >= all(
+select sum(p2.amount) from payment p2 group by month(p2.payment_date))
 ```
 
 
-[Cкриншот 1](https://github.com/MaratAlaev/gitlab-hw/blob/12.3_SQL1/img/3-1.png)
+
+
 
 
 ### Задание 4
 
 ```SQL
-  select c.active, lower(replace(c.first_name, 'LL', 'pp'))
-   from customer c 
-   where c.active = 1 and c.first_name = "Kelly" or c.first_name = "Willie"
+select count(p.payment_id),
+case
+	when count(p.payment_id) > 8000 then 'да'
+	when count(p.payment_id) < 8000 then 'нет'
+end as премия
+from staff s
+join payment p on p.staff_id = s.staff_id 
+group by s.staff_id 
 ```
 
 
 
-[Cкриншот 1](https://github.com/MaratAlaev/gitlab-hw/blob/12.3_SQL1/img/4-1.png)
 
 
 ### Задание 5
 
 ```SQL
-select c.active, substring_index(c.email, '@', 1) , substring_index(c.email, '@', -1) 
-   from customer c 
+select f.title 
+from film f 
+left join inventory i on i.film_id = f.film_id
+left join rental r on i.inventory_id = r.inventory_id 
+where r.rental_id is null
 ```
-
-[Cкриншот 1](https://github.com/MaratAlaev/gitlab-hw/blob/12.3_SQL1/img/5-1.png)
-
-
-### Задание 6
-
-```SQL
-   select c.active, CONCAT(UPPER(SUBSTRING(substring_index(c.email, '@', 1) ,1,1)),LOWER(SUBSTRING(substring_index(c.email, '@', 1),2))) , substring_index(c.email, '@', -1) 
-   from customer c 
-```
-
-[Cкриншот 1](https://github.com/MaratAlaev/gitlab-hw/blob/12.3_SQL1/img/6-1.png)
