@@ -28,6 +28,9 @@ where date(p.payment_date) = '2005-07-30' and p.payment_date = r.rental_date and
 Больше всего потребляют оконные функции 
 если их изменить , то запрос будет выполняться быстрее
 
+так же я убрал лишний join 
+и убрал функцию DATE так как она мешает использовать index
+
 ```SQL
 SELECT CONCAT(c.last_name, ' ', c.first_name) AS customer_name,
   SUM(p.amount) AS total_amount
