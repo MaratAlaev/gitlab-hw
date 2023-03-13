@@ -10,21 +10,19 @@
 + количество пользователей, закреплённых в этом магазине.
 
 ```SQL
-select count(c.customer_id), concat(c.first_name, ' ', c.last_name), c2.city
+select count(s2.staff_id), concat(s2.first_name , ' ', s2.last_name), c2.city
 from customer c
 join store s  on c.store_id = s.store_id
 join address a on a.address_id = s.address_id
-join staff s2 on s.store_id = s2.staff_id 
+join staff s2 on s.store_id = s2.store_id 
 join city c2 on c2.city_id = a.city_id 
 group by s.store_id, s2.staff_id
 having count(c.customer_id) > 300
 ```
 
-я попробовал поправить это задание 
-но все еще не до конца понимаю в чем еще тут проблема
 
+![image](https://user-images.githubusercontent.com/46092593/224838612-44a6f5b6-065e-4c14-b81a-b70c97d01f30.png)
 
-![image](https://user-images.githubusercontent.com/46092593/224724524-6a77cd45-2343-40f6-aec3-0e191041a3e9.png)
 
 
 ### Задание 2
