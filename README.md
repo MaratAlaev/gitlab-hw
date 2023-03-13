@@ -1,26 +1,31 @@
-# Домашнее задание к занятию `12.4. «SQL. Часть 2»` - `Алаев Марат`
+# Домашнее задание к занятию `12.5. «Индексы»` - `Алаев Марат`
 
 
 ### Задание 1
 
 ```SQL
-select count(c.customer_id), concat(c.first_name, ' ', c.last_name), c2.city
-from customer c
-join store s  on c.store_id = s.store_id
-join address a on a.address_id = s.address_id
-join city c2 on c2.city_id = a.city_id 
-group by s.store_id
-having count(s.store_id) > 300
+select (sum(INDEX_LENGTH) / sum(DATA_LENGTH)) * 100
+from information_schema.tables
+where TABLE_SCHEMA = 'sakila'
 ```
 
 
 
 ### Задание 2
 
+Больше всего потребляют оконные функции 
+если их изменить , то запрос будет выполняться быстрее
+
 ```SQL
-select count(f.film_id) 
-from film f
-where f.rental_duration > (select avg(f.rental_duration) from film f)
+SELECT CONCAT(c.last_name, ' ', c.first_name) AS customer_name,
+  SUM(p.amount) AS total_amount
+FROM payment p
+JOIN rental r ON p.rental_id = r.rental_id
+JOIN customer c ON r.customer_id = c.customer_id
+JOIN inventory i ON r.inventory_id = i.inventory_id
+JOIN film f ON i.film_id = f.film_id
+WHERE DATE(r.rental_date) = '2005-07-30'
+GROUP BY c.customer_id;
 ```
 
 
@@ -28,43 +33,20 @@ where f.rental_duration > (select avg(f.rental_duration) from film f)
 
 ### Задание 3
 
-```SQL
-select sum(p.amount), count(r.rental_id) 
-from rental r 
-join payment p on p.rental_id = r.rental_id 
-group by month(p.payment_date)
-having sum(p.amount) >= all(
-select sum(p2.amount) from payment p2 group by month(p2.payment_date))
-```
+GiST - это бинарное дерево в котором можно задать принцип распределения 
+в обычном же бинарном дереве используется > < или = 
+что не позволяет нормально работать с разными типами данных 
+такие как геоданные, картинки и текст
+
+SP-GiST - похож на своего собрата, в нем тоже можно задать принцип распределения 
+но в нем можно разбить области значения на подобласти
+
+GIN - состоит не из полных типов а из частей используется для поиска в тексте
 
 
+BRIN - делит данные на определенные зоны 
+и в случае того если запрос не обращается к какой-то зоне 
+то ее сразу отметают
 
-
-
-
-### Задание 4
-
-```SQL
-select count(p.payment_id),
-case
-	when count(p.payment_id) > 8000 then 'да'
-	when count(p.payment_id) < 8000 then 'нет'
-end as премия
-from staff s
-join payment p on p.staff_id = s.staff_id 
-group by s.staff_id 
-```
-
-
-
-
-
-### Задание 5
-
-```SQL
-select f.title 
-from film f 
-left join inventory i on i.film_id = f.film_id
-left join rental r on i.inventory_id = r.inventory_id 
-where r.rental_id is null
-```
+Bloom - подходит для усреднения большого количества данных 
+чем меньше будет данных, тем с большим шансом bloom может ошибиться
