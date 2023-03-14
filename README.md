@@ -71,6 +71,10 @@ https://www.exploit-db.com/exploits/2237
 ___
 
 SYN - отправляет пакет SYN, а в ответ получает RST и RST/ACK
+
 FIN - отправляет пакет ACK, а в ответ получает RST
+
 Xmas - отправляет пакет FIN/PSH/URG, а в ответ получает RST/ACK
+
 UDP - отправляет UDP пакет, в ответ получает ICMP
+
