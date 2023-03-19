@@ -53,6 +53,14 @@ https://www.exploit-db.com/exploits/40963
 + Apache < 1.3.37/2.0.59/2.2.3 mod_rewrite - Remote Overflow
 https://www.exploit-db.com/exploits/2237
 
+На сервере установлен vsftpd 2.3.4
++ vsftpd 2.3.4 - Backdoor Command Execution https://www.exploit-db.com/exploits/49757
+
+На серевере установлен BIND 9.4.2
++ BIND 9.4.1 < 9.4.2 - Remote DNS Cache Poisoning (Metasploit) https://www.exploit-db.com/exploits/6122
+
+
+
 
 
 ### Задание 2
