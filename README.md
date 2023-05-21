@@ -34,3 +34,43 @@ push более надежный так как всю конфигурацию �
 
 
 ### Задача 3
+
+Установите на личный компьютер:
+
++ VirtualBox,
++ Vagrant,
++ Terraform,
++ Ansible.
+Приложите вывод команд установленных версий каждой из программ, оформленный в Markdown.
+
+___
+VirtualBox:
+
+![image](https://github.com/MaratAlaev/gitlab-hw/assets/46092593/f36e4087-1ac9-48df-b7fc-b727eee57300)
+
+
+vagrant:
+
+![image](https://github.com/MaratAlaev/gitlab-hw/assets/46092593/2e974399-a2cf-45ad-bf9a-7f86bfc1ff52)
+
+
+terraform:
+
+![image](https://github.com/MaratAlaev/gitlab-hw/assets/46092593/c8024817-ae01-4cc0-957a-ce6fb031a0c2)
+
+
+ansible:
+
+![image](https://github.com/MaratAlaev/gitlab-hw/assets/46092593/05d8dbe2-412f-4970-b8cb-086608bdef64)
+
+
+### Задача 4 
+Воспроизведите практическую часть лекции самостоятельно.
+
++ Создайте виртуальную машину.
++ Зайдите внутрь ВМ, убедитесь, что Docker установлен с помощью команды
+```docker ps ```
+___
+![image](https://github.com/MaratAlaev/gitlab-hw/assets/46092593/89e48f27-7f60-40f5-b38f-ac2a68c5df4c)
+
+![image](https://github.com/MaratAlaev/gitlab-hw/assets/46092593/c5f80786-560d-4d4b-b0e3-8d8f60508f85)
