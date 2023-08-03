@@ -1,84 +1,303 @@
 # Домашнее задание к занятию `Основы Terraform. Yandex Cloud` - `Алаев Марат`
 
 
-### Задача 1
+### Задание 1
+В качестве ответа всегда полностью прикладывайте ваш terraform-код в git.
 
-https://hub.docker.com/r/e2754/marat-netology
+1. Изучите проект. В файле variables.tf объявлены переменные для Yandex provider.
+2. Переименуйте файл personal.auto.tfvars_example в personal.auto.tfvars. Заполните переменные: идентификаторы облака, токен доступа. Благодаря .gitignore этот файл не попадёт в публичный репозиторий. **Вы можете выбрать иной способ безопасно передать секретные данные в terraform.**
+3. Сгенерируйте или используйте свой текущий ssh-ключ. Запишите его открытую часть в переменную **vms_ssh_root_key**.
+4. Инициализируйте проект, выполните код. Исправьте намеренно допущенные синтаксические ошибки. Ищите внимательно, посимвольно. Ответьте, в чём заключается их суть.
+5. Ответьте, как в процессе обучения могут пригодиться параметры ```preemptible = true``` и ```core_fraction=5``` в параметрах ВМ. Ответ в документации Yandex Cloud.
 
+В качестве решения приложите:
 
-
-### Задача 2
-Посмотрите на сценарий ниже и ответьте на вопрос: «Подходит ли в этом сценарии использование Docker-контейнеров или лучше подойдёт виртуальная машина, физическая машина? Может быть, возможны разные варианты?»
-Детально опишите и обоснуйте свой выбор.
---
-Сценарий:
-высоконагруженное монолитное Java веб-приложение;
-Nodejs веб-приложение;
-мобильное приложение c версиями для Android и iOS;
-шина данных на базе Apache Kafka;
-Elasticsearch-кластер для реализации логирования продуктивного веб-приложения — три ноды elasticsearch, два logstash и две ноды kibana;
-мониторинг-стек на базе Prometheus и Grafana;
-MongoDB как основное хранилище данных для Java-приложения;
-Gitlab-сервер для реализации CI/CD-процессов и приватный (закрытый) Docker Registry.
-
+- скриншот ЛК Yandex Cloud с созданной ВМ;
+- скриншот успешного подключения к консоли ВМ через ssh. К OS ubuntu необходимо подключаться под пользователем ubuntu: "ssh ubuntu@vm_ip_address";
+- ответы на вопросы.
 
 ___
 
-высоконагруженная база данных, чувствительная к отказу - думаю тут лучше будет использовать отдельную связку физических серверов с настроенной репликаций
-так как тут нужна надежность 
+платформа standard-v4 не существует
+
+![image](https://github.com/MaratAlaev/gitlab-hw/assets/46092593/90fccd21-34ff-4722-aa74-98a04d899dd9)
+
+![image](https://github.com/MaratAlaev/gitlab-hw/assets/46092593/f50f777b-77c9-450e-9cae-7cdcf060f659)
+
+preemptible = true, прерываемая виртуальная машина, во первых такие машины дешевле, что помогает экономить деньги во время обучения, а также если мы случайно забудет уничтожить ее, то она через 24 часа выключится 
+для обучения самое то, в проде лучше не использовать 
 
 
-различные web-приложения - лучше будет запускать на уровне виртуализации ОС
-это позволит быстро разворачивать web приложения, а также уберет возможные проблемы связанные с зависимостями 
+core_fraction = 5, указывает в процентах, ограничение потребления ресурсов процессора, уменьшает стоимость машины и экономит деньги, но растут задержки, от чего такое не стоит использовать на высоконагруженных машинах 
 
 
+### Задание 2
 
-Windows-системы для использования бухгалтерским отделом - тут лучше использовать паравиртуализацию, на приватном офисном сервере, так как это даст надежность сохранности данных + у нас не будет зависимости от ядра ОС и не будет все забито на одной физической машине, это упростить администрирование этих серверов  
+1. Изучите файлы проекта.
+2. Замените все хардкод-**значения** для ресурсов **yandex_compute_image** и **yandex_compute_instance** на **отдельные** переменные. К названиям переменных ВМ добавьте в начало префикс **vm_web_** .  Пример: **vm_web_name**.
+2. Объявите нужные переменные в файле variables.tf, обязательно указывайте тип переменной. Заполните их **default** прежними значениями из main.tf. 
+3. Проверьте terraform plan. Изменений быть не должно. 
 
+___
+```terraform
+variable "vm_web_image_name" {
+  type = string
+  default = "ubuntu-2004-lts"
+  description = "name image"
+}
 
+variable "vm_web_name_instance" {
+   type = string
+   default = "netology-develop-platform-web"
+   description = "name instance"
+}
 
-системы, выполняющие высокопроизводительные расчёты на GPU - думаю тут лучше всего использовать физические сервера, так как в других случаях будет потеря производительности 
+variable "vm_web_platform_id" {
+  type = string
+  default = "standard-v1"
+  description = "platform_id"
+}
 
+variable "vm_web_cores" {
+  type = number
+  default = 2
+  description = "count cores"
+}
 
+variable "vm_web_memory" {
+  type = number
+  default = 1
+  description = "size memory"
+}
 
+variable "vm_web_core_fraction" {
+  type = number
+  default = 5
+  description = "fraction cpu core"
+}
 
+variable "vm_web_scheduling_policy_preemptible" {
+  type = bool
+  default = true
+  description = "enabled preemptible"
+}
 
-Задача 3
-Выберите подходящую систему управления виртуализацией для предложенного сценария. Детально опишите ваш выбор.
-Сценарии:
-100 виртуальных машин на базе Linux и Windows, общие задачи, нет особых требований. Преимущественно Windows based-инфраструктура, требуется реализация программных балансировщиков нагрузки, репликации данных и автоматизированного механизма создания резервных копий.
-Требуется наиболее производительное бесплатное open source-решение для виртуализации небольшой (20-30 серверов) инфраструктуры на базе Linux и Windows виртуальных машин.
-Необходимо бесплатное, максимально совместимое и производительное решение для виртуализации Windows-инфраструктуры.
-Необходимо рабочее окружение для тестирования программного продукта на нескольких дистрибутивах Linux.
+variable "vm_web_network_interface_nat" {
+  type = bool
+  default = true
+  description = "enable nat"
+}
+
+variable "vm_web_serial_port_enable" {
+  type = number
+  default = 1
+  description = "count enable port"
+}
+```
+
+### Задание 3
+
+1. Создайте в корне проекта файл 'vms_platform.tf' . Перенесите в него все переменные первой ВМ.
+2. Скопируйте блок ресурса и создайте с его помощью вторую ВМ в файле main.tf: **"netology-develop-platform-db"** ,  cores  = 2, memory = 2, core_fraction = 20. Объявите её переменные с префиксом **vm_db_** в том же файле ('vms_platform.tf').
+3. Примените изменения. 
 
 ___
 
-тут думаю лучшим решением будет Hyper-V или vmware workstation
-так как функционал схожий и фичи тоже схожие, обе имеют хорошую производительность и гибкость, удобно настраивать и администрировать 
-также можно делать целые снимки ОС 
-тут лучше всего будет использовать Xen, так как имеет в себе высокую производительность и довольно надежный 
 
-в этом случае думаю тоже хорошо подойдет Xen из-за все тех же причин, что и во втором варианте
+```terraform
+###vm_web
 
-тут думаю  подойдет  KVM как простой инструмент развертывания машин для тестов, также можно рассмотреть и Docker, но это зависит уже от тестов и самого типа программного обеспечения 
+variable "vm_web_image_name" {
+  type = string
+  default = "ubuntu-2004-lts"
+  description = "name image"
+}
 
-Задача 4
-Опишите возможные проблемы и недостатки гетерогенной среды виртуализации (использования нескольких систем управления виртуализацией одновременно) и что необходимо сделать для минимизации этих рисков и проблем. Если бы у вас был выбор, создавали бы вы гетерогенную среду или нет? Мотивируйте ваш ответ примерами.
+variable "vm_web_name_instance" {
+   type = string
+   default = "netology-develop-platform-web"
+   description = "name instance"
+}
+
+variable "vm_web_platform_id" {
+  type = string
+  default = "standard-v1"
+  description = "platform_id"
+}
+
+variable "vm_web_cores" {
+  type = number
+  default = 2
+  description = "count cores"
+}
+
+variable "vm_web_memory" {
+  type = number
+  default = 1
+  description = "size memory"
+}
+
+variable "vm_web_core_fraction" {
+  type = number
+  default = 5
+  description = "fraction cpu core"
+}
+
+variable "vm_web_scheduling_policy_preemptible" {
+  type = bool
+  default = true
+  description = "enabled preemptible"
+}
+
+variable "vm_web_network_interface_nat" {
+  type = bool
+  default = true
+  description = "enable nat"
+}
+
+variable "vm_web_serial_port_enable" {
+  type = number
+  default = 1
+  description = "count enable port"
+}
+
+### vm_db
+
+variable "vm_db_image_name" {
+  type = string
+  default = "ubuntu-2004-lts"
+  description = "name image"
+}
+
+variable "vm_db_name_instance" {
+   type = string
+   default = "netology-develop-platform-db"
+   description = "name instance"
+}
+
+variable "vm_db_platform_id" {
+  type = string
+  default = "standard-v1"
+  description = "platform_id"
+}
+
+variable "vm_db_cores" {
+  type = number
+  default = 2
+  description = "count cores"
+}
+
+variable "vm_db_memory" {
+  type = number
+  default = 2
+  description = "size memory"
+}
+
+variable "vm_db_core_fraction" {
+  type = number
+  default = 20
+  description = "fraction cpu core"
+}
+
+variable "vm_db_scheduling_policy_preemptible" {
+  type = bool
+  default = true
+  description = "enabled preemptible"
+}
+
+variable "vm_db_network_interface_nat" {
+  type = bool
+  default = true
+  description = "enable nat"
+}
+
+variable "vm_db_serial_port_enable" {
+  type = number
+  default = 1
+  description = "count enable port"
+}
+```
+
+### Задание 4
+
+1. Объявите в файле outputs.tf output типа map, содержащий { instance_name = external_ip } для каждой из ВМ.
+2. Примените изменения.
+
+В качестве решения приложите вывод значений ip-адресов команды ```terraform output```.
+
+___ 
+
+![image](https://github.com/MaratAlaev/gitlab-hw/assets/46092593/1f11f77b-c970-4957-a7ae-5f139f7b06e5)
+
+
+### Задание 5
+
+1. В файле locals.tf опишите в **одном** local-блоке имя каждой ВМ, используйте интерполяцию ${..} с несколькими переменными по примеру из лекции.
+2. Замените переменные с именами ВМ из файла variables.tf на созданные вами local-переменные.
+3. Примените изменения.
 
 ___
 
-из собственного опыта рекомендую так не делать 
-так как например часто встречался с конфликтами между Vmware и virtualbox
-так как иногда, одно из-за друго ломается, что потом приходится чинить 
-плюс еще WSL из-за этого то работает то нет 
-
-вообщем не рекомендую, лучше разделить машины в таком случае 
-
-ну если возможности нет, я бы включил поддержку виртуализации в самой VM 
-и там бы запустил что-то дополнительное, думаю это поможет избежать конфликтов
- 
+```terraform
+locals {
+    web_vm_name = "${var.vm_web_name_instance}"
+    db_vm_name = "${var.vm_db_name_instance}"
+}
+```
 
 
+### Задание 6
 
+1. Вместо использования трёх переменных  ".._cores",".._memory",".._core_fraction" в блоке  resources {...}, объедините их в переменные типа **map** с именами "vm_web_resources" и "vm_db_resources". В качестве продвинутой практики попробуйте создать одну map-переменную **vms_resources** и уже внутри неё конфиги обеих ВМ — вложенный map.
+2. Также поступите с блоком **metadata {serial-port-enable, ssh-keys}**, эта переменная должна быть общая для всех ваших ВМ.
+3. Найдите и удалите все более не используемые переменные проекта.
+4. Проверьте terraform plan. Изменений быть не должно.
 
-https://hub.docker.com/r/e2754/marat-netology
+___
+
+```terraform 
+variable "vms" {
+   type = map
+   default = {
+      vms_resources = {
+        vm_db = {
+            cores = 2,
+            memory = 2,
+            core_fraction = 20
+        },
+        vm_web = {
+            cores = 2,
+            memory = 1,
+            core_fraction = 5
+        }
+      }
+      vms_metadata = {
+        metadata = {
+            serial_port_enable = 1
+            ssh_keys = "ubuntu:${"var.vms_ssh_root_key"}"
+        },
+      }
+   }
+}
+```
+
+### Задание 7*
+
+Изучите содержимое файла console.tf. Откройте terraform console, выполните следующие задания: 
+
+1. Напишите, какой командой можно отобразить **второй** элемент списка test_list.
+2. Найдите длину списка test_list с помощью функции length(<имя переменной>).
+3. Напишите, какой командой можно отобразить значение ключа admin из map test_map.
+4. Напишите interpolation-выражение, результатом которого будет: "John is admin for production server based on OS ubuntu-20-04 with X vcpu, Y ram and Z virtual disks", используйте данные из переменных test_list, test_map, servers и функцию length() для подстановки значений.
+
+В качестве решения предоставьте необходимые команды и их вывод.
+
+```
+local.test_list[1]
+
+length(local.test_list) = 3
+
+local.test_map.admin
+
+"${local.test_map.admin} is admin for production server based on OS ${local.servers["${local.test_list["${length(local.test_list)-1}"]}"].image} with ${local.servers["${local.test_list["${length(local.test_list)-1}"]}"].cpu} vcpu ${local.servers["${local.test_list["${length(local.test_list)-1}"]}"].ram} ram and ${local.servers["${local.test_list["${length(local.test_list)-1}"]}"].disks["${length("${local.servers["${local.test_list["${length(local.test_list)-1}"]}"].disks}")-1}"]} virtual disks"
+```
