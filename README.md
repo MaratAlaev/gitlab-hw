@@ -227,7 +227,8 @@ variable "vm_db_serial_port_enable" {
 
 ___ 
 
-![image](https://github.com/MaratAlaev/gitlab-hw/assets/46092593/1f11f77b-c970-4957-a7ae-5f139f7b06e5)
+![image](https://github.com/MaratAlaev/gitlab-hw/assets/46092593/d0e13450-bafa-4027-a17b-8ef9bcd3304d)
+
 
 
 ### Задание 5
@@ -240,8 +241,8 @@ ___
 
 ```terraform
 locals {
-    web_vm_name = "${var.vm_web_name_instance}"
-    db_vm_name = "${var.vm_db_name_instance}"
+    web_vm_name = "${var.vm_web_name_instance} - ${var.vm_web_platform_id}"
+    db_vm_name = "${var.vm_db_name_instance} - ${var.vm_db_platform_id} "
 }
 ```
 
