@@ -28,15 +28,40 @@ variable "default_cidr" {
 variable "vpc_name" {
   type        = string
   default     = "develop"
-  description = "VPC network & subnet name"
+  description = "VPC network&subnet name"
 }
 
+###vm
 
-###ssh vars
-
-variable "vms_ssh_root_key" {
-  type        = string
-  default     = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDFv7rokkI3hZEhBI1IqeN4Pcr91ZQi0bQigkr4Y7GnDq3PBKMlKpijvDG5UOBS9OPbBP+s58Ojf0KwXxQ6Bb9Nhwz3n8S75gRcQGF2oYU8Ka4FGxZsZNBivMvMLhSCQXTJz9fvdHlucWyCMkTwioTHIZnszTd1mWuh4rCBzZ2VmRs2DDa3L/31vuMeC5LZLKAgVn3EQTm+wy3kWrpnQKEbQlkSEzOXcMSfKI30s1a2xMZQ84qK2fS4kzJkXDgqcoLq8ozjtC0JNfclv9RjAGRM5Oz0jZ41Yh7doFVB+jCkCY2c6b5YrZJl3a0aogvKRjtdsr9tQNfnBQq1NXlsO2ri3wc6Un1YQAqw0SrmH/J/Z48nHDp0yC+cMm5aBx30tq70tMMnMtTn+8mbOq1nIilZw0gVtcMO4SVSkrCABaIEAZ5bOJ27ZYqXZ8iSrpMu3/VA9amrUsMhU7gat/iKj0MeJcQHcRcICiqvdDNosLzEQ8wracLQ6nBS6imcSNCHEhc= marat@ubuntu"
-  description = "ssh-keygen -t ed25519"
+variable "vm_web_platform_id" {
+  type = string
+  default = "standard-v1"
+  description = "platform_id"
 }
 
+variable "vm_web_image_name" {
+  type = string
+  default = "ubuntu-2004-lts"
+  description = "name image"
+}
+
+variable "vms" {
+   type = map
+   default = {
+      vms_resources = {
+        vm = {
+            cores = 2,
+            memory = 2,
+            core_fraction = 5
+        }
+      }
+   }
+}
+
+data "yandex_compute_image" "ubuntu" {
+  family = var.vm_web_image_name
+}
+
+locals{
+  ssh_keys = "ubuntu:${file("~/.ssh/id_rsa.pub")}"
+}
