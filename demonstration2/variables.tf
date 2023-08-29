@@ -41,7 +41,3 @@ variable "public_key" {
   type    = string
   default = ""
 }
-
-locals{
-  ssh_keys = "ubuntu:${file("~/.ssh/id_rsa.pub")}"
-}
