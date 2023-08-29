@@ -57,11 +57,3 @@ variable "vms" {
       }
    }
 }
-
-data "yandex_compute_image" "ubuntu" {
-  family = var.vm_web_image_name
-}
-
-locals{
-  ssh_keys = "ubuntu:${file("~/.ssh/id_rsa.pub")}"
-}
