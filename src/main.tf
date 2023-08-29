@@ -7,3 +7,11 @@ resource "yandex_vpc_subnet" "develop" {
   network_id     = yandex_vpc_network.develop.id
   v4_cidr_blocks = var.default_cidr
 }
+
+data "yandex_compute_image" "ubuntu" {
+  family = var.vm_web_image_name
+}
+
+locals{
+  ssh_keys = "ubuntu:${file("~/.ssh/id_rsa.pub")}"
+}
