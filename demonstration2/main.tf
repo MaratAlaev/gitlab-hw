@@ -14,6 +14,10 @@ provider "yandex" {
   zone      = var.default_zone
 }
 
+locals{
+  ssh_keys = "ubuntu:${file("~/.ssh/id_rsa.pub")}"
+}
+
 variable "list_resources_vm" {
   type = list(object({ vm_name=string, cpu=number, ram=number,core_fraction=number ,nat=bool }))
   default = [ 
