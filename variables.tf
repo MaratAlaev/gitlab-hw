@@ -31,37 +31,7 @@ variable "vpc_name" {
   description = "VPC network&subnet name"
 }
 
-###vm
-
-variable "vm_web_platform_id" {
-  type = string
-  default = "standard-v1"
-  description = "platform_id"
-}
-
-variable "vm_web_image_name" {
-  type = string
-  default = "ubuntu-2004-lts"
-  description = "name image"
-}
-
-variable "vms" {
-   type = map
-   default = {
-      vms_resources = {
-        vm = {
-            cores = 2,
-            memory = 2,
-            core_fraction = 5
-        }
-      }
-   }
-}
-
-data "yandex_compute_image" "ubuntu" {
-  family = var.vm_web_image_name
-}
-
-locals{
-  ssh_keys = "ubuntu:${file("~/.ssh/id_rsa.pub")}"
+variable "public_key" {
+  type    = string
+  default = ""
 }
