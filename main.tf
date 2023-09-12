@@ -2,22 +2,27 @@ terraform {
   required_providers {
     yandex = {
       source = "yandex-cloud/yandex"
+      version = "0.98.0"
+    }
+    template = {
+      source  = "hashicorp/template"
+      version = "~> 2"
     }
   }
   required_version = ">=0.13"
 
- backend "s3" {
-  endpoint = "storage.yandexcloud.net"
-  bucket = "my-tfstate-1"
-  key = "terraform.tfstate"
-  region = "ru-central1"
+  #backend "s3" {
+  #endpoint = "storage.yandexcloud.net"
+  #bucket = "my-tfstate-1"
+  #key = "terraform.tfstate"
+  #region = "ru-central1"
  
-  skip_region_validation = true
-  skip_credentials_validation = true
+  #skip_region_validation = true
+  #skip_credentials_validation = true
 
-  dynamodb_endpoint = "https://docapi.serverless.yandexcloud.net/ru-central1/b1g5uqdv6c1ofocq53vq/etn9tvhn38m8rcsh7h8j"
-  dynamodb_table = "table"
-}
+  #dynamodb_endpoint = "https://docapi.serverless.yandexcloud.net/ru-central1/b1g5uqdv6c1ofocq53vq/etnpm4o126n8fpr1690l"
+  #dynamodb_table = "table"
+#}
 
 
  # backend "s3" {
@@ -28,9 +33,9 @@ terraform {
  #
  # skip_region_validation = true
  # skip_credentials_validation = true
- #}
-
+#}
 }
+
 
 provider "yandex" {
   token     = var.token
@@ -62,7 +67,7 @@ module "vpc_dev" {
 }
 
 module "test-vm" {
-  source          = "git::https://github.com/udjin10/yandex_compute_instance.git?ref=main"
+  source          = "git::https://github.com/udjin10/yandex_compute_instance.git?ref=1.0.0"
   env_name        = "develop"
   network_id      = module.vpc_dev.network_id
   subnet_zones    = [module.vpc_dev.subnet_zone]
